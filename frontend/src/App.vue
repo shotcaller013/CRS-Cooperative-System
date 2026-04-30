@@ -1,0 +1,256 @@
+<template>
+  <router-view v-if="route.meta.public" />
+
+  <div v-else class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-logo">CRS</div>
+        <div>
+          <div class="brand-name">CRS Holdings<br>Employees Credit Coop</div>
+          <div class="brand-sub">Mandaue City · Cebu</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section">Overview</div>
+        <router-link to="/" class="nav-item" exact-active-class="nav-active">
+          <svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+          Dashboard
+        </router-link>
+
+        <div class="nav-section">People</div>
+        <router-link to="/members" class="nav-item" active-class="nav-active">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Members
+          <span v-if="pendingCount > 0" class="nav-badge">{{ pendingCount }}</span>
+        </router-link>
+
+        <div class="nav-section">Loans</div>
+        <router-link to="/loans" class="nav-item" active-class="nav-active">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          Applications
+        </router-link>
+        <router-link to="/pipeline" class="nav-item" active-class="nav-active">
+          <svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="18"/><rect x="14" y="3" width="7" height="10"/></svg>
+          Pipeline
+        </router-link>
+        <router-link to="/releasing" class="nav-item" active-class="nav-active">
+          <svg class="nav-icon" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Releasing
+        </router-link>
+        <router-link to="/monitoring" class="nav-item" active-class="nav-active">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          Monitoring
+        </router-link>
+        <router-link to="/payments" class="nav-item" active-class="nav-active">
+          <svg class="nav-icon" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          Payments
+        </router-link>
+
+        <div class="nav-section">Reports</div>
+        <router-link to="/reports" class="nav-item" active-class="nav-active">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="12" y2="17"/></svg>
+          Reports
+        </router-link>
+
+        <div class="nav-section">System</div>
+        <router-link to="/settings" class="nav-item" active-class="nav-active">
+          <svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Settings
+        </router-link>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-card">
+          <div class="user-av">{{ initials }}</div>
+          <div class="user-info">
+            <div class="user-name">{{ user?.name ?? 'User' }}</div>
+            <div class="user-role">{{ user?.email ?? '' }}</div>
+          </div>
+          <button class="logout-btn" title="Sign out" @click="handleLogout">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <router-view />
+    </main>
+
+    <div class="toast-container">
+      <div v-for="t in toasts" :key="t.id" :class="['toast', `toast-${t.type}`]">
+        {{ t.message }}
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useToast } from './composables/useToast'
+import { useAuth } from './composables/useAuth'
+import { api } from './composables/useApi'
+import { useMembersStats } from './composables/useMembersStats'
+
+const { toasts } = useToast()
+const { user, clearSession } = useAuth()
+const route  = useRoute()
+const router = useRouter()
+const { pendingCount } = useMembersStats()
+
+const initials = computed(() => {
+  const name = user.value?.name ?? ''
+  return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) || '?'
+})
+
+async function handleLogout() {
+  try { await api.logout() } catch {}
+  clearSession()
+  router.replace('/login')
+}
+</script>
+
+<style scoped>
+.app-shell {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--surface);
+}
+
+/* ── Sidebar ───────────────────────────────────────────── */
+.sidebar {
+  width: var(--sidebar-w);
+  min-width: var(--sidebar-w);
+  background: var(--crs-red);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0; top: 0; bottom: 0;
+  z-index: 100;
+  box-shadow: 4px 0 20px rgba(139,26,26,0.25);
+}
+
+.sidebar-brand {
+  padding: 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.brand-logo {
+  width: 44px; height: 44px;
+  background: white;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 13px; font-weight: 700;
+  color: var(--crs-red);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  flex-shrink: 0;
+}
+.brand-name {
+  font-size: 11px; font-weight: 700;
+  color: white;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+.brand-sub { font-size: 9.5px; color: rgba(255,255,255,0.55); margin-top: 2px; }
+
+.sidebar-nav { flex: 1; padding: 10px 0; overflow-y: auto; }
+
+.nav-section {
+  padding: 14px 18px 4px;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+}
+
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 18px;
+  color: rgba(255,255,255,0.65);
+  font-size: 13px; font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all var(--tx);
+  position: relative;
+}
+.nav-item:hover { color: white; background: rgba(255,255,255,0.08); }
+.nav-active {
+  color: white !important;
+  background: rgba(255,255,255,0.12) !important;
+  font-weight: 600;
+}
+.nav-active::after {
+  content: '';
+  position: absolute;
+  right: 0; top: 6px; bottom: 6px;
+  width: 3px;
+  background: var(--omni-orange);
+  border-radius: 3px 0 0 3px;
+}
+
+.nav-badge {
+  margin-left: auto;
+  margin-right: 8px;
+  font-size: 10px; font-weight: 700;
+  padding: 2px 7px; border-radius: 99px;
+  background: var(--omni-orange); color: white;
+}
+
+.nav-icon {
+  width: 17px; height: 17px;
+  flex-shrink: 0;
+  opacity: 0.85;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ── Footer ────────────────────────────────────────────── */
+.sidebar-footer {
+  padding: 14px 18px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+.user-card { display: flex; align-items: center; gap: 10px; }
+.user-av {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--omni-orange);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+}
+.user-info { flex: 1; min-width: 0; }
+.user-name { font-size: 12.5px; font-weight: 600; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-role { font-size: 10.5px; color: rgba(255,255,255,0.45); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.logout-btn {
+  background: none; border: none; cursor: pointer;
+  color: rgba(255,255,255,0.4);
+  padding: 4px; border-radius: 5px;
+  display: flex; align-items: center;
+  transition: color var(--tx);
+  flex-shrink: 0;
+}
+.logout-btn svg { width: 15px; height: 15px; }
+.logout-btn:hover { color: #fca5a5; }
+
+/* ── Main ──────────────────────────────────────────────── */
+.main-area {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+}
+</style>
