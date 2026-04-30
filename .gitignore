@@ -11,22 +11,22 @@
 !.env.example
 
 # ============================================================
-# Laravel backend
+# Laravel backend (FIXED → backendCrs)
 # ============================================================
-backend/vendor/
-backend/node_modules/
-backend/.env
-backend/.env.*
-!backend/.env.example
-backend/storage/logs/*.log
-backend/storage/framework/cache/data/
-backend/storage/framework/sessions/
-backend/storage/framework/views/
-backend/bootstrap/cache/*.php
-backend/public/hot
-backend/public/storage
-backend/.phpunit.cache/
-backend/phpunit.xml
+backendCrs/vendor/
+backendCrs/node_modules/
+backendCrs/.env
+backendCrs/.env.*
+!backendCrs/.env.example
+backendCrs/storage/logs/*.log
+backendCrs/storage/framework/cache/data/
+backendCrs/storage/framework/sessions/
+backendCrs/storage/framework/views/
+backendCrs/bootstrap/cache/*.php
+backendCrs/public/hot
+backendCrs/public/storage
+backendCrs/.phpunit.cache/
+backendCrs/phpunit.xml
 
 # ============================================================
 # Vue / Vite frontend
@@ -70,3 +70,9 @@ desktop.ini
 *.swp
 *.swo
 *~
+
+# ============================================================
+# GLOBAL safety (recommended)
+# ============================================================
+/vendor
+/node_modules
