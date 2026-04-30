@@ -44,25 +44,37 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { api } from '@/composables/useApi'
-import { useAuth } from '@/composables/useAuth'
+import api from '@/services/api'
 
 const router = useRouter()
-const { setSession } = useAuth()
 
-const form    = reactive({ email: '', password: '' })
+const form = reactive({
+  email: '',
+  password: '',
+})
+
 const loading = ref(false)
-const error   = ref('')
+const error = ref('')
 
 async function submit() {
   loading.value = true
-  error.value   = ''
+  error.value = ''
+
   try {
-    const data = await api.login(form)
-    setSession(data)
+    // ✅ DIRECT login (NO csrf needed)
+    const res = await api.post('/login', form)
+
+    // store token
+    if (res.data.token) {
+      localStorage.setItem('auth_token', res.data.token)
+    }
+
     router.replace('/')
   } catch (e) {
-    error.value = e.message || 'Login failed.'
+    error.value =
+      e.response?.data?.message ||
+      e.message ||
+      'Login failed'
   } finally {
     loading.value = false
   }
